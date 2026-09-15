@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary-50: #fbf9f3;
+  --color-primary-100: #f5eedc;
+  --color-primary-200: #eadbba;
+  --color-primary-300: #dfc291;
+  --color-primary-400: #d2a64c;
+  --color-primary-500: #c48c2b;
+  --color-primary-600: #a66a21;
+  --color-primary-700: #864e1e;
+  --color-primary-800: #70411f;
+  --color-primary-900: #221f1a;
+  --color-surface: #fdfcf8;
+  --color-background: #f5eedc;
+}
+
+body {
+  background-color: var(--color-background);
+  color: #111827;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Chrome-like Vertical Tab Active State */
+.nav-tab-active {
+  background-color: var(--color-surface);
+  color: var(--color-primary-900);
+  border-top-left-radius: 1rem;
+  border-bottom-left-radius: 1rem;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  z-index: 30; /* Ensures it sits above borders */
+}
+
+/* Flared corners using radial-gradient */
+.nav-tab-active::before,
+.nav-tab-active::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  width: 1rem;
+  height: 1rem;
+  background-color: transparent;
+  pointer-events: none;
+}
+
+.nav-tab-active::before {
+  top: -1rem;
+  background: radial-gradient(circle at top left, transparent 1rem, var(--color-surface) 0);
+  filter: drop-shadow(0 1px 0 var(--color-surface));
+}
+
+.nav-tab-active::after {
+  bottom: -1rem;
+  background: radial-gradient(circle at bottom left, transparent 1rem, var(--color-surface) 0);
+  filter: drop-shadow(0 -1px 0 var(--color-surface));
+}
