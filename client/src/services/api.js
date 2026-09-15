@@ -4,6 +4,18 @@ const api = axios.create({
   baseURL: 'http://localhost:3000/api',
 });
 
+// Add a request interceptor to attach the JWT token
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 export const fetchMessages = async (room) => {
   const { data } = await api.get(`/chat/${room}/messages`);
   return data;

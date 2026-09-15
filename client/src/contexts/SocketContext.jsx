@@ -3,13 +3,13 @@ import socketService from '../services/socketService';
 
 export const SocketContext = createContext(null);
 
-export const SocketProvider = ({ children, userId }) => {
+export const SocketProvider = ({ children, token }) => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    if (userId) {
-      // Connect to socket when userId is available
-      socketService.connect(userId);
+    if (token) {
+      // Connect to socket when token is available
+      socketService.connect(token);
       setSocket(socketService.getSocket());
     }
 
@@ -17,7 +17,7 @@ export const SocketProvider = ({ children, userId }) => {
       // Clean up on unmount
       socketService.disconnect();
     };
-  }, [userId]);
+  }, [token]);
 
   return (
     <SocketContext.Provider value={socket}>

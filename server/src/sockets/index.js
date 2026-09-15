@@ -1,4 +1,7 @@
 import { Server } from 'socket.io';
+import jwt from 'jsonwebtoken';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_key';
 import { handleMessageEvents } from './handlers/messageHandler.js';
 import { handleRoomEvents } from './handlers/roomHandler.js';
 import { handleUserEvents } from './handlers/userHandler.js';
@@ -15,14 +18,18 @@ export const initSockets = (server) => {
     }
   });
 
+
   // Optional: Socket middleware for authentication
   io.use(async (socket, next) => {
-    const userId = socket.handshake.auth.userId;
-    if (!userId) {
-      return next(new Error('Authentication error: userId required'));
+    const token = socket.handshake.auth.token;
+    if (!token) {
+      return next(new Error('Authentication error: token required'));
     }
     
     try {
+      const decoded = jwt.verify(token, JWT_SECRET);
+      const userId = decoded.userId;
+
       const user = await User.findById(userId);
       if (!user) {
         return next(new Error('User not found'));
@@ -37,7 +44,7 @@ export const initSockets = (server) => {
       
       next();
     } catch (error) {
-      next(new Error('Authentication error'));
+      next(new Error('Authentication error: invalid token'));
     }
   });
 

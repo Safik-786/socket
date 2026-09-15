@@ -7,14 +7,14 @@ class SocketService {
     this.socket = null;
   }
 
-  connect(userId) {
+  connect(token) {
     if (!this.socket) {
       this.socket = io(SOCKET_URL, {
         auth: {
-          userId,
+          token,
         },
       });
-      console.log('Socket initialized with userId:', userId);
+      console.log('Socket initialized with token');
     }
   }
 
