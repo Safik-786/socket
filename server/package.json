@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/server.js"
+    "dev": "nodemon src/server.js",
+    "prod": "npm run build --prefix ../client && npx cross-env NODE_ENV=production npx concurrently \"node src/server.js\" \"npx localtunnel --port 3000\""
   },
   "keywords": [],
   "author": "",

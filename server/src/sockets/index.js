@@ -5,6 +5,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_key';
 import { handleMessageEvents } from './handlers/messageHandler.js';
 import { handleRoomEvents } from './handlers/roomHandler.js';
 import { handleUserEvents } from './handlers/userHandler.js';
+import { handleGameEvents } from './handlers/gameHandler.js';
 import User from '../models/User.js';
 import Group from '../models/Group.js';
 
@@ -69,6 +70,7 @@ export const initSockets = (server) => {
     handleMessageEvents(io, socket);
     handleRoomEvents(io, socket);
     handleUserEvents(io, socket);
+    handleGameEvents(io, socket);
   });
 
   return io;

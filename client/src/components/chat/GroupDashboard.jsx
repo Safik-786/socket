@@ -7,6 +7,7 @@ import SidebarHeader from '../layout/SidebarHeader';
 import { useSidebarQuery } from '../../hooks/useSidebarQuery';
 import { useQueryClient } from '@tanstack/react-query';
 import { Users, MessageCircle, MessageSquare, Settings } from 'lucide-react';
+import TreasureHuntGame from '../game/TreasureHuntGame';
 
 // Modals
 import DirectoryModal from '../modals/DirectoryModal';
@@ -157,68 +158,73 @@ const GroupDashboard = ({ user, onLogout }) => {
         onLogout={onLogout} 
       />
 
-      {/* SECONDARY SIDEBAR (List) */}
-      <div className="w-64 bg-surface border-r border-primary-200 flex flex-col h-full overflow-hidden shrink-0 z-10 shadow-sm">
-        <SidebarHeader 
-          activeTab={activeTab} 
-          openDirectory={openDirectory} 
-          setShowCreateModal={setShowCreateModal} 
-        />
-        
-        <div className="flex-1 overflow-y-auto text-primary-900 py-2">
-          {activeTab === 'dms' && (
-            <div>
-              {directMessages.length === 0 ? (
-                <div className="px-4 py-6 text-center text-sm text-primary-600">No direct messages yet.</div>
-              ) : (
-                directMessages.map(dm => {
-                  const otherUser = dm.members.find(m => m._id !== user._id) || user;
-                  return (
-                    <button
-                      key={dm._id}
-                      onClick={() => setActiveGroupId(dm._id)}
-                      className={`w-full text-left px-3 py-1.5 border-b border-transparent hover:bg-primary-100 transition-colors flex items-center gap-2.5 ${activeGroupId === dm._id ? 'bg-primary-100 shadow-sm relative z-10 font-medium' : ''}`}
-                    >
-                      <div className="relative">
-                        <div className="w-7 h-7 rounded-full bg-primary-200 text-primary-800 flex items-center justify-center font-bold text-xs">
-                          {otherUser.username.charAt(0).toUpperCase()}
+      {/* SECONDARY SIDEBAR (List) — hidden when game tab is active */}
+      {activeTab !== 'game' && (
+        <div className="w-64 bg-surface border-r border-primary-200 flex flex-col h-full overflow-hidden shrink-0 z-10 shadow-sm">
+          <SidebarHeader 
+            activeTab={activeTab} 
+            openDirectory={openDirectory} 
+            setShowCreateModal={setShowCreateModal} 
+          />
+          
+          <div className="flex-1 overflow-y-auto text-primary-900 py-2">
+            {activeTab === 'dms' && (
+              <div>
+                {directMessages.length === 0 ? (
+                  <div className="px-4 py-6 text-center text-sm text-primary-600">No direct messages yet.</div>
+                ) : (
+                  directMessages.map(dm => {
+                    const otherUser = dm.members.find(m => m._id !== user._id) || user;
+                    return (
+                      <button
+                        key={dm._id}
+                        onClick={() => setActiveGroupId(dm._id)}
+                        className={`w-full text-left px-3 py-1.5 border-b border-transparent hover:bg-primary-100 transition-colors flex items-center gap-2.5 ${activeGroupId === dm._id ? 'bg-primary-100 shadow-sm relative z-10 font-medium' : ''}`}
+                      >
+                        <div className="relative">
+                          <div className="w-7 h-7 rounded-full bg-primary-200 text-primary-800 flex items-center justify-center font-bold text-xs">
+                            {otherUser.username.charAt(0).toUpperCase()}
+                          </div>
+                          <div className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 border-[1.5px] border-surface rounded-full ${otherUser.isOnline ? 'bg-green-500' : 'bg-primary-300'}`}></div>
                         </div>
-                        <div className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 border-[1.5px] border-surface rounded-full ${otherUser.isOnline ? 'bg-green-500' : 'bg-primary-300'}`}></div>
+                        <div className="text-[13px] truncate text-primary-900">{otherUser.username}</div>
+                      </button>
+                    )
+                  })
+                )}
+              </div>
+            )}
+
+            {activeTab === 'groups' && (
+              <div>
+                {standardGroups.length === 0 ? (
+                  <div className="px-4 py-6 text-center text-sm text-primary-600">No groups yet.</div>
+                ) : (
+                  standardGroups.map(group => (
+                    <button
+                      key={group._id}
+                      onClick={() => setActiveGroupId(group._id)}
+                      className={`w-full text-left px-3 py-1.5 border-b border-transparent hover:bg-primary-100 transition-colors flex items-center gap-2.5 ${activeGroupId === group._id ? 'bg-primary-100 shadow-sm relative z-10 font-medium' : ''}`}
+                    >
+                      <div className="w-7 h-7 rounded-lg bg-primary-200 text-primary-700 flex items-center justify-center">
+                        <MessageSquare size={14} />
                       </div>
-                      <div className="text-[13px] truncate text-primary-900">{otherUser.username}</div>
+                      <div className="text-[13px] truncate text-primary-900">{group.name}</div>
                     </button>
-                  )
-                })
-              )}
-            </div>
-          )}
-
-          {activeTab === 'groups' && (
-            <div>
-              {standardGroups.length === 0 ? (
-                <div className="px-4 py-6 text-center text-sm text-primary-600">No groups yet.</div>
-              ) : (
-                standardGroups.map(group => (
-                  <button
-                    key={group._id}
-                    onClick={() => setActiveGroupId(group._id)}
-                    className={`w-full text-left px-3 py-1.5 border-b border-transparent hover:bg-primary-100 transition-colors flex items-center gap-2.5 ${activeGroupId === group._id ? 'bg-primary-100 shadow-sm relative z-10 font-medium' : ''}`}
-                  >
-                    <div className="w-7 h-7 rounded-lg bg-primary-200 text-primary-700 flex items-center justify-center">
-                      <MessageSquare size={14} />
-                    </div>
-                    <div className="text-[13px] truncate text-primary-900">{group.name}</div>
-                  </button>
-                ))
-              )}
-            </div>
-          )}
+                  ))
+                )}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Main Chat Area */}
+      {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden bg-background">
-        {activeGroup ? (
+        {/* Treasure Hunt Game — takes full width */}
+        {activeTab === 'game' ? (
+          <TreasureHuntGame user={user} />
+        ) : activeGroup ? (
           <>
             <div className="h-16 bg-surface px-6 border-b border-primary-200 flex justify-between items-center shadow-sm z-10 shrink-0">
               <div>

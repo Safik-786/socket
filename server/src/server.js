@@ -15,6 +15,8 @@ const server = http.createServer(app);
 initSockets(server);
 
 // Start listening
-server.listen(PORT, () => {
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on port ${PORT}`);
 });
+// Nodemon restart trigger
+// Attempt 2
